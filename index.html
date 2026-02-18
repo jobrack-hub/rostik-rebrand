@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REBRAND 2.0 — Rostik</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #141414;
+      --bg-card-hover: #1a1a1a;
+      --border: #222;
+      --border-active: #333;
+      --text: #e8e8e8;
+      --text-dim: #666;
+      --text-mid: #999;
+      --accent: #225ed6;
+      --accent-dim: rgba(34, 214, 138, 0.1);
+      --accent-mid: rgba(34, 214, 138, 0.2);
+      --red: #ff4757;
+      --red-dim: rgba(255, 71, 87, 0.1);
+      --orange: #ffa502;
+      --orange-dim: rgba(255, 165, 2, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* ===== LAYOUT ===== */
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      padding-bottom: 100px;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      text-align: center;
+      padding: 2rem 0 1.5rem;
+    }
+
+    .version-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(34, 214, 138, 0.15);
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.25rem;
+    }
+
+    .header .subtitle {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    .header .subtitle span {
+      color: var(--text-mid);
+    }
+
+    /* ===== STATS BAR ===== */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-value.accent { color: var(--accent); }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.25rem;
+    }
+
+    /* ===== DAILY CHECK-IN ===== */
+    .section-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .checkin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .checkin-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .checkin-item:hover { background: var(--bg-card-hover); }
+
+    .checkin-item.checked {
+      background: var(--accent-dim);
+    }
+
+    .checkin-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .checkin-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .checkin-item.checked .checkin-icon {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+    }
+
+    .checkin-name {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .checkin-item.checked .checkin-name {
+      color: var(--accent);
+    }
+
+    .checkin-points {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      background: var(--bg);
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .checkin-item.checked .checkin-points {
+      color: var(--accent);
+      background: var(--accent-dim);
+      border-color: rgba(34, 214, 138, 0.2);
+    }
+
+    .checkin-item.penalty .checkin-points {
+      color: var(--red);
+    }
+
+    .checkin-item.penalty.checked {
+      background: var(--red-dim);
+    }
+
+    .checkin-item.penalty.checked .checkin-icon {
+      background: var(--red);
+      border-color: var(--red);
+    }
+
+    .checkin-item.penalty.checked .checkin-name {
+      color: var(--red);
+    }
+
+    .checkin-item.penalty.checked .checkin-points {
+      color: var(--red);
+      background: var(--red-dim);
+      border-color: rgba(255, 71, 87, 0.2);
+    }
+
+    /* ===== WEEKLY PROGRESS ===== */
+    .weekly-bar {
+      margin-bottom: 1.5rem;
+    }
+
+    .weekly-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .weekly-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    .weekly-score span { color: var(--accent); }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-card);
+      border-radius: 100px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 100px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 0%;
+    }
+
+    .progress-fill.warning { background: var(--orange); }
+    .progress-fill.danger { background: var(--red); }
+
+    /* ===== WEEK DOTS ===== */
+    .week-dots {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .day-dot {
+      text-align: center;
+    }
+
+    .day-dot-label {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+    }
+
+    .day-dot-circle {
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 40px;
+      margin: 0 auto;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      transition: all 0.3s;
+    }
+
+    .day-dot-circle.today {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .day-dot-circle.done {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 600;
+    }
+
+    .day-dot-circle.partial {
+      background: var(--orange-dim);
+      border-color: rgba(255, 165, 2, 0.3);
+      color: var(--orange);
+    }
+
+    .day-dot-circle.missed {
+      background: var(--red-dim);
+      border-color: rgba(255, 71, 87, 0.2);
+      color: var(--red);
+    }
+
+    /* ===== MEMO CARD ===== */
+    .memo-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .memo-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .memo-from {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .memo-text {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .memo-text.sweet {
+      color: var(--accent);
+    }
+
+    .memo-refresh {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      transition: color 0.2s;
+    }
+
+    .memo-refresh:hover { color: var(--text-mid); }
+
+    /* ===== ANTI-SABOTAGE ===== */
+    .rules-grid {
+      display: grid;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .rule-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.15rem;
+    }
+
+    .rule-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .rule-text {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      line-height: 1.5;
+    }
+
+    /* ===== RESET BUTTON ===== */
+    .reset-zone {
+      text-align: center;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+
+    .reset-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* ===== CONFETTI ===== */
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+      overflow: hidden;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      top: -10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      animation: confettiFall 2.5s ease-out forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ===== POINT POPUP ===== */
+    .point-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--accent);
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .point-popup.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .point-popup.hide {
+      transform: translate(-50%, -80%) scale(0.5);
+      opacity: 0;
+    }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-card);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      z-index: 998;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 500px) {
+      .app { padding: 1rem; padding-bottom: 80px; }
+      .header h1 { font-size: 1.5rem; }
+      .stat-value { font-size: 1.3rem; }
+      .day-dot-circle { max-width: 36px; border-radius: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="version-badge" id="version-badge">v1.0.0</div>
+    <h1>REBRAND 2.0</h1>
+    <p class="subtitle">Client: <span>Rostik</span> &middot; Creative Director: <span>Ana</span></p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value accent" id="streak-count">0</div>
+      <div class="stat-label">Day Streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="today-points">0</div>
+      <div class="stat-label">Today</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="total-points">0</div>
+      <div class="stat-label">All Time</div>
+    </div>
+  </div>
+
+  <!-- MEMO FROM CREATIVE DIRECTOR -->
+  <div class="section-label">Memo from the Creative Director</div>
+  <div class="memo-card">
+    <div class="memo-from">From: Ana &middot; Creative Director</div>
+    <div class="memo-text" id="memo-text">Loading your performance review...</div>
+    <button class="memo-refresh" id="memo-refresh">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+      another memo
+    </button>
+  </div>
+
+  <!-- DAILY CHECK-IN -->
+  <div class="section-label">Daily Check-in</div>
+  <div class="checkin-card">
+    <div class="checkin-item" data-task="gym" data-points="3">
+      <div class="checkin-left">
+        <div class="checkin-icon">&#128170;</div>
+        <div class="checkin-name">Gym Session</div>
+      </div>
+      <div class="checkin-points">+3</div>
+    </div>
+    <div class="checkin-item" data-task="snacks" data-points="2">
+      <div class="checkin-left">
+        <div class="checkin-icon">&#127769;</div>
+        <div class="checkin-name">No Late Snacks</div>
+      </div>
+      <div class="checkin-points">+2</div>
+    </div>
+    <div class="checkin-item" data-task="protein" data-points="2">
+      <div class="checkin-left">
+        <div class="checkin-icon">&#129385;</div>
+        <div class="checkin-name">Protein Target</div>
+      </div>
+      <div class="checkin-points">+2</div>
+    </div>
+    <div class="checkin-item" data-task="steps" data-points="1">
+      <div class="checkin-left">
+        <div class="checkin-icon">&#128694;</div>
+        <div class="checkin-name">8k+ Steps</div>
+      </div>
+      <div class="checkin-points">+1</div>
+    </div>
+    <div class="checkin-item" data-task="thorfinn" data-points="1">
+      <div class="checkin-left">
+        <div class="checkin-icon">&#128054;</div>
+        <div class="checkin-name">Walked Thorfinn 10+ min</div>
+      </div>
+      <div class="checkin-points">+1</div>
+    </div>
+    <div class="checkin-item penalty" data-task="cake" data-points="-3">
+      <div class="checkin-left">
+        <div class="checkin-icon">&#127856;</div>
+        <div class="checkin-name">Ate Cake</div>
+      </div>
+      <div class="checkin-points">-3</div>
+    </div>
+  </div>
+
+  <!-- WEEKLY PROGRESS -->
+  <div class="section-label">Sprint Progress</div>
+  <div class="weekly-bar">
+    <div class="weekly-header">
+      <span class="weekly-score"><span id="weekly-pts">0</span>/50 pts</span>
+      <span class="weekly-score" style="color: var(--text-dim);">Week <span id="week-num">1</span></span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- WEEK DOTS -->
+  <div class="week-dots" id="week-dots"></div>
+
+  <!-- ANTI-SABOTAGE -->
+  <div class="section-label">Anti-Sabotage Protocol</div>
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rule-title">"I'll Start Monday"</div>
+      <div class="rule-text">You don't. You started when you opened this app. Monday is a myth invented by people who never ship.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-title">The Two-Miss Rule</div>
+      <div class="rule-text">One miss = life happens. Two misses = a pattern forming. Never miss twice, Rostik. You know how compound interest works.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-title">Late Night Fridge Raids</div>
+      <div class="rule-text">You're not hungry. You're dopamine-seeking. Have sparkling water. Have protein yogurt. Have a 10-minute walk. Have some self-respect.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-title">The Scale Panic</div>
+      <div class="rule-text">The scale is a liar and a drama queen. Track the waist. Track how clothes fit. Track the face gains. The number is noise.</div>
+    </div>
+  </div>
+
+  <!-- RESET -->
+  <div class="reset-zone">
+    <button class="reset-btn" id="reset-btn">Reset All Data</button>
+  </div>
+
+</div>
+
+<!-- CONFETTI CONTAINER -->
+<div class="confetti-container" id="confetti-container"></div>
+
+<!-- POINT POPUP -->
+<div class="point-popup" id="point-popup">+0</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// =============================================
+// DATA & STATE
+// =============================================
+const STORAGE_KEY = 'rostik-rebrand-v2';
+const WEEKLY_TARGET = 50;
+
+function getToday() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function getWeekStart(dateStr) {
+  const d = new Date(dateStr);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  const monday = new Date(d.setDate(diff));
+  return monday.toISOString().split('T')[0];
+}
+
+function getDayLabels() {
+  return ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+}
+
+function loadData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) return JSON.parse(raw);
+  return {
+    startDate: getToday(),
+    days: {},
+    streak: 0,
+    totalPoints: 0,
+    lastCheckIn: null,
+  };
+}
+
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+let data = loadData();
+
+function getTodayData() {
+  const today = getToday();
+  if (!data.days[today]) {
+    data.days[today] = { gym: false, snacks: false, protein: false, steps: false, thorfinn: false, cake: false, points: 0 };
+  }
+  return data.days[today];
+}
+
+// =============================================
+// MESSAGES — 70% ROAST, 30% SWEET
+// =============================================
+
+const memos = {
+  // When he hasn't checked in anything today
+  noCheckin: [
+    "Rostik. It's a new day. The check-in boxes are right there. They're not going to tap themselves. I've seen you spend 40 minutes choosing a font. You can spend 10 seconds here.",
+    "Good morning to everyone except people who open the app, stare at it, and close it without checking in. That's you, Rostik. That's literally you right now.",
+    "The boxes are empty. The fridge was probably not. We see the correlation. Tap something.",
+    "Your discipline has left the chat. Literally. There are zero check marks. Even your worst Figma draft has more effort than this.",
+    "Hey. No judgment. But also yes judgment. Check in.",
+    "You redesign brands for a living but can't redesign the habit of ignoring this app? Interesting creative direction.",
+    "The checklist is looking at you the way clients look at overdue deliverables. Handle it.",
+    "Still empty? Cool. I'll just sit here. Waiting. Like your protein target.",
+    "Even Thorfinn walked today. Thorfinn has four legs and no concept of discipline. What's your excuse?",
+  ],
+
+  // When he checks in but low score (1-3 points)
+  lowScore: [
+    "Bare minimum Rostik has entered the chat. Hey bestie. Love the energy of doing the absolute least.",
+    "You got some points. Congratulations. The bar was on the floor and you gently stepped over it. Inspiring.",
+    "Listen. Some points are better than no points. That's literally the nicest thing I can say about this.",
+    "This is giving 'minimum viable product' and not in the cool startup way.",
+    "One or two taps. Revolutionary effort. Truly groundbreaking commitment. I'm overwhelmed.",
+    "You did... something. Technically. The way a blurry photo is technically photography.",
+  ],
+
+  // When he's doing well (4-6 points)
+  midScore: [
+    "Not bad, Rostik. Not bad at all. You're like a 7/10 today. Which for you is basically a glow-up.",
+    "Okay okay. I see effort. I see some discipline. The rebrand is... loading. Slowly. Like your old website before I optimized it.",
+    "Decent day. You're building momentum. Don't ruin it by celebrating with a midnight snack.",
+    "This is what consistency looks like. Not sexy. Not viral. Just showing up. I respect it.",
+    "You're in the zone. Not the final boss zone, but like... world 3. Keep going.",
+    "Solid. If this were a design review I'd say 'approved with minor revisions.' The revision is: do this again tomorrow.",
+  ],
+
+  // When he gets a perfect day (7-8 points)
+  perfectDay: [
+    "Full marks, Rostik. FULL MARKS. Who are you and what have you done with my boyfriend who once ate cereal at 11pm and called it 'a light snack'?",
+    "8/8. I'm genuinely proud of you. Don't let this go to your head. But also... go off, king.",
+    "You actually did everything today. Everything. I'm not crying, I'm just... allergic to discipline. Wait no — I'm proud. There. I said it.",
+    "Perfect score. Version 2.0 is compiling. The old Rostik could never. The new Rostik is kind of hot, not gonna lie.",
+    "Full points day. This is the version of you I fell for. Except now with better macros. Upgrade complete.",
+    "Every. Single. Box. Checked. If discipline were a font, you'd be Helvetica today — clean, reliable, and everyone wants to be you.",
+    "Full score AND you walked Thorfinn AND no cake? Who IS this man? The rebrand is rebranding.",
+  ],
+
+  // Streak messages (3+ days)
+  streak: [
+    "Day {streak} in a row. You're scaring me, Rostik. In a good way. The consistency is giving 'main character.'",
+    "{streak}-day streak. At this point I might have to admit you're actually committed. Don't make me say it twice.",
+    "Streak: {streak}. You haven't missed. The fridge after 9pm hasn't seen you. The gym HAS. I'm... impressed? This feels weird.",
+    "{streak} days straight. Even I couldn't roast this. And I roast everything. Fine. You're doing amazing. There.",
+    "You're on a {streak}-day streak and honestly I'm running out of roasts because you keep showing up. Rude.",
+    "{streak} days. The compound effect is real. Your waistline will send a thank-you card. So will your girlfriend.",
+  ],
+
+  // When he breaks a streak
+  streakBroken: [
+    "The streak... it's gone, Rostik. Like your motivation apparently. It was a beautiful {streak} days. We'll always have the memories. Now start a new one.",
+    "R.I.P. to your {streak}-day streak. Cause of death: you. Let's rebuild. You've done it before.",
+    "Streak broken at {streak}. I'm not mad. I'm disappointed. Which, as your girlfriend, is worse. Way worse. Start again.",
+    "Your {streak}-day streak just flatlined. The good news? Version 2.0 has unlimited respawns. Go again.",
+  ],
+
+  // Random sweet ones (show occasionally)
+  sweet: [
+    "Hey. Between all the roasting — I'm genuinely proud that you're doing this. You don't need to change for me. You're doing this for you. And I think that's kind of beautiful.",
+    "Real talk: I love you whether you hit 50 points or 0. This app is just me cheering you on in the most unhinged way I know how.",
+    "You're already attractive, Rostik. This isn't about that. This is about you feeling as good as you look. And you deserve that.",
+    "I know some days are harder. I know motivation isn't constant. But you keep opening this app. That means something. I see you.",
+    "For the record: I didn't build this because you need fixing. I built this because you said you wanted to feel sharper. And I want to help you get there. That's it.",
+    "You could quit tomorrow and I'd still think you're wonderful. But you won't quit. Because we both know you're competitive and slightly petty. Use it.",
+  ],
+
+  // Weekly summary roasts
+  weeklyBad: [
+    "Weekly review: {points}/50. Rostik, baby. If this were a client deliverable, you'd be fired. Lovingly fired. But fired.",
+    "Sprint score: {points}/50. This is giving 'first draft that never got revised.' We can do better. WE. I said we.",
+    "End of week: {points} points out of 50. In design terms, this is a wireframe that was never prototyped. Ship something next week.",
+  ],
+
+  weeklyMid: [
+    "Weekly score: {points}/50. Decent. Not portfolio-worthy, but decent. Like a solid B-. Your parents would be... adequately satisfied.",
+    "Sprint result: {points}/50. You're in the 'shows potential' category. Which is code for 'could try harder.' But hey — you showed up.",
+    "Week done: {points}/50. Middle of the road. You're the Toyota Corolla of fitness right now. Reliable but not exciting. Rev it up.",
+  ],
+
+  weeklyGood: [
+    "WEEKLY SCORE: {points}/50. You absolute machine. If discipline were a portfolio piece, this would be award-winning. Frame it. I'm framing it.",
+    "Sprint complete: {points}/50. Rostik. ROSTIK. This is elite. This is the rebrand happening in real time. I'm genuinely speechless (rare).",
+    "End of sprint: {points}/50. You crushed it. Every gym session. Every closed kitchen. The protein. The steps. THIS is Version 2.0.",
+  ],
+};
+
+function getMemo() {
+  const today = getTodayData();
+  const todayPts = today.points;
+  const streak = data.streak;
+  const rand = Math.random();
+
+  // 15% chance of sweet memo regardless
+  if (rand < 0.15) {
+    return { text: pick(memos.sweet), sweet: true };
+  }
+
+  // Streak messages (if 3+ day streak, 40% chance)
+  if (streak >= 3 && rand < 0.55) {
+    return { text: pick(memos.streak).replace('{streak}', streak), sweet: false };
+  }
+
+  // Score-based
+  if (todayPts === 0) return { text: pick(memos.noCheckin), sweet: false };
+  if (todayPts <= 3) return { text: pick(memos.lowScore), sweet: false };
+  if (todayPts <= 6) return { text: pick(memos.midScore), sweet: false };
+  return { text: pick(memos.perfectDay), sweet: true };
+}
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// =============================================
+// VERSION NUMBER (based on total points)
+// =============================================
+function getVersion() {
+  const tp = data.totalPoints;
+  if (tp === 0) return 'v1.0.0';
+  const major = 1 + Math.floor(tp / 200);
+  const minor = Math.floor((tp % 200) / 20);
+  const patch = tp % 20;
+  return `v${major}.${minor}.${patch}`;
+}
+
+// =============================================
+// UI UPDATES
+// =============================================
+const streakEl = document.getElementById('streak-count');
+const todayPtsEl = document.getElementById('today-points');
+const totalPtsEl = document.getElementById('total-points');
+const weeklyPtsEl = document.getElementById('weekly-pts');
+const weekNumEl = document.getElementById('week-num');
+const progressFill = document.getElementById('progress-fill');
+const versionBadge = document.getElementById('version-badge');
+const memoText = document.getElementById('memo-text');
+const memoRefresh = document.getElementById('memo-refresh');
+const weekDotsEl = document.getElementById('week-dots');
+const pointPopup = document.getElementById('point-popup');
+const toastEl = document.getElementById('toast');
+const confettiContainer = document.getElementById('confetti-container');
+
+function updateUI() {
+  const today = getTodayData();
+
+  // Stats
+  streakEl.textContent = data.streak;
+  todayPtsEl.textContent = today.points;
+  totalPtsEl.textContent = data.totalPoints;
+
+  // Version
+  versionBadge.textContent = getVersion();
+
+  // Check-in items
+  document.querySelectorAll('.checkin-item').forEach(item => {
+    const task = item.dataset.task;
+    if (today[task]) {
+      item.classList.add('checked');
+    } else {
+      item.classList.remove('checked');
+    }
+  });
+
+  // Weekly progress
+  const weekStart = getWeekStart(getToday());
+  let weekPts = 0;
+  const weekDays = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart);
+    d.setDate(d.getDate() + i);
+    const ds = d.toISOString().split('T')[0];
+    weekDays.push(ds);
+    if (data.days[ds]) weekPts += data.days[ds].points;
+  }
+
+  weeklyPtsEl.textContent = weekPts;
+  const pct = Math.min((weekPts / WEEKLY_TARGET) * 100, 100);
+  progressFill.style.width = pct + '%';
+  progressFill.className = 'progress-fill';
+  if (pct < 30) progressFill.classList.add('danger');
+  else if (pct < 60) progressFill.classList.add('warning');
+
+  // Week number
+  const startDate = new Date(data.startDate);
+  const now = new Date();
+  const diffWeeks = Math.floor((now - startDate) / (7 * 24 * 60 * 60 * 1000)) + 1;
+  weekNumEl.textContent = diffWeeks;
+
+  // Week dots
+  const todayStr = getToday();
+  const labels = getDayLabels();
+  weekDotsEl.innerHTML = '';
+  weekDays.forEach((ds, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'day-dot';
+
+    const label = document.createElement('div');
+    label.className = 'day-dot-label';
+    label.textContent = labels[i];
+
+    const circle = document.createElement('div');
+    circle.className = 'day-dot-circle';
+
+    const dayData = data.days[ds];
+    if (ds === todayStr) {
+      circle.classList.add('today');
+      circle.textContent = dayData ? dayData.points : '—';
+    } else if (ds > todayStr) {
+      circle.textContent = '—';
+    } else if (dayData && dayData.points >= 6) {
+      circle.classList.add('done');
+      circle.textContent = dayData.points;
+    } else if (dayData && dayData.points > 0) {
+      circle.classList.add('partial');
+      circle.textContent = dayData.points;
+    } else {
+      circle.classList.add('missed');
+      circle.textContent = '0';
+    }
+
+    dot.appendChild(label);
+    dot.appendChild(circle);
+    weekDotsEl.appendChild(dot);
+  });
+}
+
+// =============================================
+// CHECK-IN LOGIC
+// =============================================
+document.querySelectorAll('.checkin-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const task = item.dataset.task;
+    const pts = parseInt(item.dataset.points);
+    const today = getTodayData();
+
+    if (today[task]) {
+      // Uncheck
+      today[task] = false;
+      today.points -= pts;
+      data.totalPoints -= pts;
+    } else {
+      // Check
+      today[task] = true;
+      today.points += pts;
+      data.totalPoints += pts;
+
+      if (pts > 0) {
+        showPointPopup('+' + pts);
+      } else {
+        showPointPopup(pts);
+        const cakeRoasts = [
+          "Rostik. The CAKE? Really? That's -3 points and you know it.",
+          "Cake detected. Points deducted. Dignity questionable.",
+          "You just ate your progress. Literally. It was chocolate flavoured.",
+          "I'm not mad about the cake. I'm disappointed. Which is worse.",
+          "Cake. Again. At this point the bakery should sponsor your rebrand.",
+        ];
+        setTimeout(() => showToast(pick(cakeRoasts)), 300);
+      }
+
+      // Perfect day?
+      if (today.points === 9) {
+        setTimeout(() => {
+          launchConfetti();
+          showToast("PERFECT DAY. Full marks. Version 2.0 loading...");
+        }, 300);
+      }
+    }
+
+    // Update streak
+    updateStreak();
+
+    data.days[getToday()] = today;
+    saveData(data);
+    updateUI();
+    refreshMemo();
+  });
+});
+
+function updateStreak() {
+  let streak = 0;
+  const today = getToday();
+  let checkDate = new Date(today);
+
+  // If today has points, count it
+  const todayData = data.days[today];
+  if (todayData && todayData.points > 0) {
+    streak = 1;
+    checkDate.setDate(checkDate.getDate() - 1);
+  }
+
+  // Count backwards
+  while (true) {
+    const ds = checkDate.toISOString().split('T')[0];
+    const dayData = data.days[ds];
+    if (dayData && dayData.points > 0) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  // Check if streak was broken
+  const prevStreak = data.streak;
+  if (prevStreak >= 3 && streak === 0 && data.lastCheckIn && data.lastCheckIn !== today) {
+    // Streak broken - show message
+    showToast(pick(memos.streakBroken).replace('{streak}', prevStreak));
+  }
+
+  data.streak = streak;
+  data.lastCheckIn = today;
+}
+
+// =============================================
+// MEMO
+// =============================================
+function refreshMemo() {
+  const memo = getMemo();
+  memoText.textContent = memo.text;
+  memoText.className = 'memo-text' + (memo.sweet ? ' sweet' : '');
+}
+
+memoRefresh.addEventListener('click', refreshMemo);
+
+// =============================================
+// EFFECTS
+// =============================================
+function showPointPopup(text) {
+  pointPopup.textContent = text;
+  pointPopup.className = 'point-popup show';
+  setTimeout(() => {
+    pointPopup.className = 'point-popup hide';
+  }, 600);
+  setTimeout(() => {
+    pointPopup.className = 'point-popup';
+  }, 1000);
+}
+
+function showToast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  setTimeout(() => toastEl.classList.remove('show'), 4000);
+}
+
+function launchConfetti() {
+  const colors = ['#22d68a', '#ff4757', '#ffa502', '#3742fa', '#2ed573', '#ff6348', '#7bed9f'];
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 0.8 + 's';
+    piece.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+    piece.style.width = (6 + Math.random() * 6) + 'px';
+    piece.style.height = (4 + Math.random() * 4) + 'px';
+    confettiContainer.appendChild(piece);
+    setTimeout(() => piece.remove(), 4000);
+  }
+}
+
+// =============================================
+// RESET
+// =============================================
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (confirm('Reset everything? All streaks, points, and history will be gone. Like they never happened. (They did happen though. I remember.)')) {
+    localStorage.removeItem(STORAGE_KEY);
+    data = loadData();
+    updateUI();
+    refreshMemo();
+    showToast('Clean slate. Version 1.0.0. Let\'s go again.');
+  }
+});
+
+// =============================================
+// INIT
+// =============================================
+updateUI();
+refreshMemo();
+</script>
+
+</body>
+</html>
